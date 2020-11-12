@@ -43,7 +43,7 @@ export default function App() {
   const gameOverHandler = numberOfAttempts => { setAttemptsCount(numberOfAttempts) }
 
   let content = <StartScreen onStartGame={startGameHandler} />
-  content = <GameOverScreen attemptsCount={1} userNumber={1} onRestart={configureNewGameHandler} />
+  // content = <GameOverScreen attemptsCount={1} userNumber={1} onRestart={configureNewGameHandler} />
 
   if (userNumber && attemptsCount <= 0) {
     content = <GameScreen userChoice={userNumber} onGameOver={gameOverHandler} />
