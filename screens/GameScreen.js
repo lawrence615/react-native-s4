@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Text, StyleSheet, Alert } from 'react-native'
+import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 import NumberContainer from '../components/NumberContainer'
@@ -23,17 +23,16 @@ const generateNumberBetween = (min, max, exclude) => {
 
 const GameScreen = props => {
 
-  const [currentGuess, setCurrentGuess] = useState(
-    generateNumberBetween(1, 100, props.userChoice)
-  )
+  const initialGuess = generateNumberBetween(1, 100, props.userChoice)
+  const [currentGuess, setCurrentGuess] = useState(initialGuess)
 
-  const [attempts, setAttempts] = useState(0)
+  const [pastAttempts, setPastAttempts] = useState([initialGuess])
   const currentLow = useRef(1)
   const currentHigh = useRef(100)
 
   const { userChoice, onGameOver } = props
   useEffect(() => {
-    if (currentGuess === userChoice) { onGameOver(attempts) }
+    if (currentGuess === userChoice) { onGameOver(pastAttempts.length) }
   }, [currentGuess, userChoice, onGameOver])
 
   const nextGuessHandler = direction => {
@@ -45,11 +44,12 @@ const GameScreen = props => {
     if (direction === 'lower') {
       currentHigh.current = currentGuess
     } else {
-      currentLow.current = currentGuess
+      currentLow.current = currentGuess + 1
     }
     const nextNumber = generateNumberBetween(currentHigh.current, currentLow.current, currentGuess)
     setCurrentGuess(nextNumber)
-    setAttempts(curAttempts => curAttempts + 1)
+    // setAttempts(curAttempts => curAttempts + 1)
+    setPastAttempts(curPastAttempt => [nextNumber, ...curPastAttempt])
   }
 
   return (
@@ -64,6 +64,13 @@ const GameScreen = props => {
           <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
       </Card>
+      <ScrollView>
+        {pastAttempts.map(attempt => (
+          <View key={attempt}>
+            <Text>{attempt}</Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   )
 }
