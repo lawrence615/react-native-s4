@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, Image } from 'react-native'
 
 import TitleText from '../components/TitleText'
 import BodyText from '../components/BodyText'
+import MainButton from '../components/MainButton'
 
 import Colours from '../constants/colours'
 
@@ -19,7 +20,7 @@ const GameOverScreen = props => {
           resizeMode="cover" />
       </View>
       <View style={styles.resultsContainer}><BodyText style={styles.resultText}>Your phone needed <Text style={styles.highlight}>{props.attemptsCount}</Text> attempts to guess the number <Text style={styles.highlight}>{props.userNumber}</Text></BodyText></View>
-      <Button title="NEW GAME" onPress={props.onRestart} />
+      <MainButton onClick={props.onRestart}>NEW GAME</MainButton>
     </View>
   )
 }
