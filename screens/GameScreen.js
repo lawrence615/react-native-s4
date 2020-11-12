@@ -51,7 +51,7 @@ const GameScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <Text style={DefaultStyles.bodyText}>Opponent's Guess</Text>
+      <Text style={DefaultStyles.titleText}>Opponent's Guess</Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
         <Button title="LOWER" onPress={nextGuessHandler.bind(this, 'lower')} />
