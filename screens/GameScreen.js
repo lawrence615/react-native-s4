@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons'
 import NumberContainer from '../components/NumberContainer'
 import Card from '../components/Card'
 import MainButton from '../components/MainButton'
+import BodyText from '../components/BodyText'
 
 import DefaultStyles from '../constants/default-styles'
 
@@ -20,6 +21,13 @@ const generateNumberBetween = (min, max, exclude) => {
     return rndNum
   }
 }
+
+const renderListItem = (value, numOfAttempt) => (
+  <View key={value} style={styles.listItem}>
+    <BodyText>#{numOfAttempt}</BodyText>
+    <BodyText>{value}</BodyText>
+  </View>
+)
 
 const GameScreen = props => {
 
@@ -64,13 +72,11 @@ const GameScreen = props => {
           <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
       </Card>
-      <ScrollView>
-        {pastAttempts.map(attempt => (
-          <View key={attempt}>
-            <Text>{attempt}</Text>
-          </View>
-        ))}
-      </ScrollView>
+      <View style={styles.list}>
+        <ScrollView>
+          {pastAttempts.map((attempt, index) => renderListItem(attempt, pastAttempts.length - index))}
+        </ScrollView>
+      </View>
     </View>
   )
 }
@@ -87,6 +93,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 250,
     maxWidth: '90%'
+  },
+  list: {
+    flex:1,
+    width:'80%'
+  },
+  listItem: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent:'space-between'
   }
 })
 
