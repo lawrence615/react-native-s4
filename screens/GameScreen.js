@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Alert, ScrollView, FlatList } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 import NumberContainer from '../components/NumberContainer'
@@ -22,10 +22,17 @@ const generateNumberBetween = (min, max, exclude) => {
   }
 }
 
-const renderListItem = (value, numOfAttempt) => (
-  <View key={value} style={styles.listItem}>
-    <BodyText>#{numOfAttempt}</BodyText>
-    <BodyText>{value}</BodyText>
+// const renderListItem = (value, numOfAttempt) => (
+//   <View key={value} style={styles.listItem}>
+//     <BodyText>#{numOfAttempt}</BodyText>
+//     <BodyText>{value}</BodyText>
+//   </View>
+// )
+
+const renderListItem = (listLength, itemData) => (
+  <View style={styles.listItem}>
+    <BodyText>#{listLength - itemData.index}</BodyText>
+    <BodyText>{itemData.item}</BodyText>
   </View>
 )
 
@@ -33,8 +40,8 @@ const GameScreen = props => {
 
   const initialGuess = generateNumberBetween(1, 100, props.userChoice)
   const [currentGuess, setCurrentGuess] = useState(initialGuess)
+  const [pastAttempts, setPastAttempts] = useState([initialGuess.toString()])
 
-  const [pastAttempts, setPastAttempts] = useState([initialGuess])
   const currentLow = useRef(1)
   const currentHigh = useRef(100)
 
@@ -57,7 +64,8 @@ const GameScreen = props => {
     const nextNumber = generateNumberBetween(currentHigh.current, currentLow.current, currentGuess)
     setCurrentGuess(nextNumber)
     // setAttempts(curAttempts => curAttempts + 1)
-    setPastAttempts(curPastAttempt => [nextNumber, ...curPastAttempt])
+    // setPastAttempts(curPastAttempt => [nextNumber, ...curPastAttempt])
+    setPastAttempts(curPastAttempt => [nextNumber.toString(), ...curPastAttempt])
   }
 
   return (
@@ -73,9 +81,14 @@ const GameScreen = props => {
         </MainButton>
       </Card>
       <View style={styles.listContainer}>
-        <ScrollView contentContainerStyle={styles.list}>
+        {/* <ScrollView contentContainerStyle={styles.list}>
           {pastAttempts.map((attempt, index) => renderListItem(attempt, pastAttempts.length - index))}
-        </ScrollView>
+        </ScrollView> */}
+        <FlatList
+          keyExtractor={item => item}
+          data={pastAttempts}
+          renderItem={renderListItem.bind(this, pastAttempts.length)}
+          contentContainerStyle={styles.list} />
       </View>
     </View>
   )
@@ -95,13 +108,13 @@ const styles = StyleSheet.create({
     maxWidth: '90%'
   },
   listContainer: {
-    flex:1,
-    width:'80%'
+    flex: 1,
+    width: '60%'
   },
-  list:{
-    flexGrow:1,
-    alignItems:'center',
-    justifyContent:'flex-end'
+  list: {
+    flexGrow: 1,
+    // alignItems: 'center',
+    justifyContent: 'flex-end'
   },
   listItem: {
     borderColor: '#ccc',
@@ -110,8 +123,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: 'white',
     flexDirection: 'row',
-    justifyContent:'space-between',
-    width:'60%'
+    justifyContent: 'space-between',
+    width: '100%'
   }
 })
 
